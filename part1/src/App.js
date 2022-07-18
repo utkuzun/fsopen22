@@ -1,8 +1,29 @@
 
+const Part = (props) => {
+
+  const {part} = props
+
+  return (
+    <p>{part.part} {part.ex}</p>
+  )
+}
+
+
 const Header = (props) => {
   const { name } = props;
   return <>
     <h1>{name}</h1>
+  </>
+}
+
+const Content2 = (props) => {
+  const {exercies : exArray} = props
+  const array = exArray.map((ex, index) => {
+    return <Part key={index} part={ex} />
+  })
+
+  return <>
+    {array}
   </>
 }
 
@@ -11,7 +32,7 @@ const Content = (props) => {
   const {exercies : exArray} = props
   const array = exArray.map((ex, index) => {
     return <p key={index}>{ex.part} {ex.ex} </p>
-    })
+  })
 
   return <>
     {array}
@@ -48,7 +69,10 @@ function App() {
   return (
     <div>
       <Header name={course} />
+      <h3>Content component 1</h3>
       <Content exercies={exercies}/>
+      <h3>Content component 2</h3>
+      <Content2 exercies={exercies} />
       <Total exes={exercies}/>
     </div>
   );

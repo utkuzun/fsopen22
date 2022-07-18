@@ -1,0 +1,21 @@
+title exercise 0.6
+
+note over browser:
+
+when submitted form submit
+create json data :
+{
+    content : <some note>;
+    date : >date of note>;
+}
+
+create post request to the server
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over browser:
+browser send note=<some note> to server
+end note
+
+server->browser : Return with HTTP Status code 201 created meesage

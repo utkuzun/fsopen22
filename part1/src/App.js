@@ -1,7 +1,5 @@
 
-const Part = (props) => {
-
-  const {part} = props
+const Part = ({part}) => {
 
   return (
     <p>{part.name} {part.exercise}</p>
@@ -9,16 +7,14 @@ const Part = (props) => {
 }
 
 
-const Header = (props) => {
-  const { name } = props;
-  return <>
+const Header = ({name}) => {
+return <>
     <h1>{name}</h1>
   </>
 }
 
-const Content = (props) => {
+const Content = ({parts}) => {
 
-  const {parts} = props
   const array = parts.map((part, index) => {
     return <Part key={index} part={part} />
   })
@@ -28,9 +24,8 @@ const Content = (props) => {
   </>
 }
 
-const Total = (props) => {
+const Total = ({exes}) => {
 
-  const exes  = props.exes
 
   let total = 0
 
@@ -64,7 +59,7 @@ function App() {
 
     ]
   }
-
+  debugger
   return (
     <div>
       <Header name={course.name} />

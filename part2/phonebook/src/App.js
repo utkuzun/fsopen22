@@ -1,22 +1,10 @@
 import { useState, useEffect } from 'react'
 
-import personService from "./services/persons"
+import personService from "./services/people"
 
 import Filter from "./components/Filter"
 import PersonForm from './components/PersonForm'
-
-const Person = ({person, deletePerson}) => {
-
-  const {id, number, name} = person
-
-  return (
-  <div>
-    <p>{name} {number}</p>
-    <button onClick={()=>deletePerson(id)}>delete</button>
-  </div>) 
-  
-}
-
+import Person from './components/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([])

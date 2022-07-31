@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react'
-import axios from "axios"
+
+import personService from "./services/persons"
+
 import Filter from "./components/Filter"
 import PersonForm from './components/PersonForm'
 
-const Person = ({person}) => {
-  return <p>{person.name} {person.number}</p>
+const Person = ({person, deletePerson}) => {
+
+  const {id, number, name} = person
+
+  return (
+  <div>
+    <p>{name} {number}</p>
+    <button onClick={()=>deletePerson(id)}>delete</button>
+  </div>) 
+  
 }
 
 
@@ -16,29 +26,52 @@ const App = () => {
 
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-      })
+    personService
+      .getAll()
+      .then(response => setPersons(response)
+)
   }, [])
 
-  const handleSubmit = (e)=> {
+  const handleSubmit = async (e)=> {
     e.preventDefault()
+
+    if (!newName) {
+      return
+    }
 
     const isAlreadyAdded = persons.find((person)=>person.name === newName)
 
     if (isAlreadyAdded) {
-      alert(`${newName} is already added to the phonebook`)
+      const message = `${newName} is already added to the phonebook, replace the old number with a new one`
+      if (window.confirm(message)) {
+        const response = await personService.changePerson({...isAlreadyAdded, number : newNumber})
+        const newPeople = persons.map(person => person.id !== response.id ? person : response)
+        setPersons(newPeople)
+      }
       return
     }
 
 
     const newPerson = {name : newName, number : newNumber}
-    setPersons([...persons, newPerson])
+    const personAdd = await personService.create(newPerson)
+    setPersons([...persons, personAdd])
     setNewName("")
     setNewNumber("")
   } 
+
+  
+  const deletePerson = async (id) => {
+    const deleteTo = persons.find(person => person.id === id)
+    const message = `Delete ${deleteTo.name}`
+    if (window.confirm(message)){
+      const response = await personService.deletePerson(id)
+
+      if (response) {
+        const newPersons = persons.filter(person => person.id !==id)
+        setPersons(newPersons)
+      }
+    }
+  }
 
  
   const filteredPersons = persons.filter(person => person.name.toLowerCase().startsWith(filter))
@@ -61,7 +94,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       {filteredPersons.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person key={person.name} person={person} deletePerson={deletePerson}/>
       ))}
     </div>
   )

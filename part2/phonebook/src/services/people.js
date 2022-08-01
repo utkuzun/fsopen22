@@ -13,7 +13,6 @@ const deletePerson = async id => {
         const response = await axios.delete(`${baseUrl}/${id}`)
         return response.statusText
     } catch (error) {
-        console.log("mahmut");
         return false
     }
 }
@@ -27,7 +26,7 @@ const changePerson = async changedPerson => {
     const {id} = changedPerson
     try {
         const response = await axios.put(`${baseUrl}/${id}`, changedPerson)
-        return response.data
+        return await response.data
     } catch (error) {
         console.log(error);
         return false

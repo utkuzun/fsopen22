@@ -72,7 +72,7 @@ const App = () => {
     const deleteTo = persons.find(person => person.id === id)
     const message = `Delete ${deleteTo.name}`
     if (window.confirm(message)){
-      const response = await personService.deletePerson(222)
+      const response = await personService.deletePerson(id)
 
       if (response) {
         const newPersons = persons.filter(person => person.id !==id)

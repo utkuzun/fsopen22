@@ -1,3 +1,19 @@
 {
-  "people": []
+  "people": [
+    {
+      "name": "utkumal",
+      "number": "456",
+      "id": 3
+    },
+    {
+      "name": "mal",
+      "number": "sfa",
+      "id": 4
+    },
+    {
+      "name": "ahmet",
+      "number": "sfa",
+      "id": 5
+    }
+  ]
 }

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+import "./App.css"
 
 import personService from "./services/people"
 
+import Info from './components/Info'
 import Filter from "./components/Filter"
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
@@ -11,7 +13,15 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState("")
+  const [info, setInfo] = useState({message : "", show : false, status : ""})
 
+  const logInfo = (message, status)=> {
+    const newInfo = {message, status, show : true}
+    setInfo(newInfo)
+    setTimeout(() => {
+      setInfo({ message: '', show: false, status: '' })
+    }, 2000);
+  }
 
   useEffect(() => {
     personService
@@ -33,8 +43,15 @@ const App = () => {
       const message = `${newName} is already added to the phonebook, replace the old number with a new one`
       if (window.confirm(message)) {
         const response = await personService.changePerson({...isAlreadyAdded, number : newNumber})
-        const newPeople = persons.map(person => person.id !== response.id ? person : response)
-        setPersons(newPeople)
+        if (response) {
+          const newPeople = persons.map(person => person.id !== response.id ? person : response)
+          setPersons(newPeople)
+        } else {
+          
+          const message = `Information of ${isAlreadyAdded.name} has already been removed from server`
+          const status = "error"
+          logInfo(message, status)
+        }
       }
       return
     }
@@ -42,6 +59,9 @@ const App = () => {
 
     const newPerson = {name : newName, number : newNumber}
     const personAdd = await personService.create(newPerson)
+    const message = `Added ${personAdd.name}`
+    const status  = "success"
+    logInfo(message, status)
     setPersons([...persons, personAdd])
     setNewName("")
     setNewNumber("")
@@ -52,11 +72,15 @@ const App = () => {
     const deleteTo = persons.find(person => person.id === id)
     const message = `Delete ${deleteTo.name}`
     if (window.confirm(message)){
-      const response = await personService.deletePerson(id)
+      const response = await personService.deletePerson(222)
 
       if (response) {
         const newPersons = persons.filter(person => person.id !==id)
         setPersons(newPersons)
+      } else {
+        const message = `Information of ${deleteTo.name} has already been removed from server`
+        const status = "error"
+        logInfo(message, status)
       }
     }
   }
@@ -67,6 +91,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {info.show && 
+        <Info info={info} />
+      }
 
       <Filter filter={filter} setFilter={setFilter}/>
 
